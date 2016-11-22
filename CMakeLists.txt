@@ -1,32 +1,43 @@
-project(vkengine)
-cmake_minimum_required(VERSION 3.1)
-project(vkengine VERSION 0.1.0 )
-set(vkengine_VERSION_ABI 1)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+project(CVK VERSION 0.1.0 )
+set(CVK_VERSION_ABI 1)
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
-  ${CMAKE_SOURCE_DIR}/CMake/common)
+# Disable in source building
+if( "${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}" )
+	message( FATAL "no in source building allowed." )
+endif()
+
+list(APPEND CMAKE_MODULE_PATH 
+	${PROJECT_SOURCE_DIR}/CMake
+	${CMAKE_SOURCE_DIR}/CMake/common)
+
+# Default build type is Debug
+if( NOT CMAKE_BUILD_TYPE )
+	set( CMAKE_BUILD_TYPE Debug )
+endif( NOT CMAKE_BUILD_TYPE )
+
+if ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+	add_definitions( -DDEBUG )
+endif( )
 
 include(GitExternal)
 
+set(CVK_DESCRIPTION "CVK")
 set(COMMON_PROJECT_DOMAIN maldicion069)
-set(VKENGINE_DESCRIPTION "vulkan")
-set(PROJECT_VERSION_ABI ${${PROJECT_NAME}_VERSION_ABI})
-set(VERSION_ABI 0)
 
 include(Common)
 
-# Allow warnings
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
+common_find_package( GLM REQUIRED )
+common_find_package( Boost COMPONENTS unit_test_framework )
+common_find_package( Vulkan REQUIRED )
+common_find_package( GLFW )
 
-set(VULKAN_LIBRARIES )
+#set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF)
+#set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-common_find_package(glfw)
-common_find_package(glm)
+list (APPEND CVK_LIBRARIES GLM GLFW Vulkan)
+
 common_find_package_post()
 
-set (VKENGINE_DEPENDENT_LIBRARIES glfw glm)
-
-add_subdirectory(src)
-
-include(CPackConfig)
-include(DoxygenRule)
+add_subdirectory(cvk)

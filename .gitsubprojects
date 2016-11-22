@@ -1,4 +1,2 @@
 # -*- mode: cmake -*-
 git_subproject(GLFW https://github.com/glfw/glfw.git 5b80515)
-git_subproject(GLM https://github.com/g-truc/glm.git 877ea2a)
-#git_subproject(ASSIMP https://github.com/assimp/assimp.git 7a578aa)
