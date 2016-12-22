@@ -1,13 +1,15 @@
 source_group(\\ FILES CMakeLists.txt)
 
 set( CVK_PUBLIC_HEADERS
-	VkApplication.hpp
+	Includes.hpp
+	VKApplication.hpp
 	VKDevice.hpp
 )
 
 set( CVK_HEADERS )
 
 set( CVK_SOURCES
+	VKApplication.cpp
     main.cpp
 )
 

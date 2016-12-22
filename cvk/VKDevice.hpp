@@ -21,10 +21,12 @@ namespace CVK
 		}
 		bool initialize(VKApplication& instance, uint32_t index)
 		{
+            std::cout << "enumeratePhysicalDevices" << std::endl;
 			if (!enumeratePhysicalDevices(instance, index))
 			{
 				return false;
 			}
+            std::cout << "queryPhysicalDeviceInfo" << std::endl;
 			if (!queryPhysicalDeviceInfo())
 			{
 				return false;
@@ -32,12 +34,14 @@ namespace CVK
 
 			uint32_t queueCount = 0;
 			vkGetPhysicalDeviceQueueFamilyProperties(_physicalDevice, &queueCount, nullptr);
+            std::cout << "queueCount" << std::endl;
 			if (queueCount < 1)
 			{
 				// Invalid queue count
 				return false;
 			}
 			_queueFamilyProperties.resize(queueCount);
+            std::cout << "_queueFamilyProperties" << std::endl;
 			vkGetPhysicalDeviceQueueFamilyProperties(_physicalDevice, &queueCount, _queueFamilyProperties.data());
 
 			QueueFamily qFamily = queryQueueFamily(VK_QUEUE_GRAPHICS_BIT);
@@ -109,8 +113,12 @@ namespace CVK
     	{
     		VkResult err = VK_SUCCESS;
 
+            std::cout << "ENUM" << std::endl;
+
     		uint32_t deviceCount = 0;
     		err = vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+
+            std::cout << "DEVICE COUNT: " << deviceCount << std::endl;
     		// TODO: Check deviceCount < 1
     		if (err != VK_SUCCESS)
     		{
@@ -134,15 +142,18 @@ namespace CVK
 
     		return true;
     	}
-
     	bool queryPhysicalDeviceInfo()
     	{
     		if (_physicalDevice == VK_NULL_HANDLE)
+            {
     			return false;
+            }
 
     		vkGetPhysicalDeviceFeatures(_physicalDevice, &_physicalDeviceFeatures);
     		vkGetPhysicalDeviceProperties(_physicalDevice, &_physicalDeviceProperties);
     		vkGetPhysicalDeviceMemoryProperties(_physicalDevice, &_physicalDeviceMemoryProperties);
+
+            return true;
     	}
 
         VkDevice                            _device;

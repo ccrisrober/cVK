@@ -1,8 +1,4 @@
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-
-#include <vulkan/vulkan.h>
-#include <GLFW/glfw3.h>
+#include "Includes.hpp"
 
 #include <iostream>
 
@@ -16,9 +12,6 @@ int main() {
     GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
 
 
-    CVK::VKApplication app;
-    app.initialize();
-
 
     uint32_t extensionCount = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -31,10 +24,22 @@ int main() {
     for(auto& ext: instanceExtensions)
     {
         std::cout << ext.extensionName << std::endl;
-    }    
+    }
 
-    while(!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+
+    CVK::VKApplication app;
+    bool ok = app.initialize(window);
+
+    if (ok)
+    {
+        CVK::VKDevice dev;
+        dev.initialize(app, 0);
+
+        std::cout << "ALL OK" << std::endl;
+
+        /*while(!glfwWindowShouldClose(window)) {
+            glfwPollEvents();
+        }*/
     }
 
     glfwDestroyWindow(window);
